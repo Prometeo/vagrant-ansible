@@ -1,0 +1,50 @@
+---
+
+- name: Create postgres database
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name={{ dbname }}
+
+- name: ensure user has access to database
+  become: true
+  become_user: postgres
+  postgresql_user:
+    db={{dbname}}
+    name={{dbuser}}
+    password={{dbpassword}}
+    priv=ALL
+
+- name: ensure no other user can access the database
+  become: true
+  become_user: postgres
+  postgresql_privs:
+    db={{dbname}}
+    role=PUBLIC
+    type=database
+    priv=ALL
+    state=absent
+
+- name: Configure PostgreSQL
+  become: yes
+  template:
+    src: "{{item}}"
+    dest: "{{postgresql_conf_directory}}/{{item}}"
+  with_items:
+    - postgresql.conf
+  notify: restart postgresql
+  tags:
+    - postgresql
+    - db
+    - conf
+
+- name: Configure PostgreSQL (authentication)
+  become: yes
+  template:
+    src: pg_hba.conf
+    dest: "{{postgresql_hba_file}}"
+  notify: restart postgresql
+  tags:
+    - postgresql
+    - db
+    - conf

@@ -1,0 +1,17 @@
+- hosts: all
+  become: yes
+  become_user: root
+  roles:
+    - role: postgresql
+
+  vars:
+    dbname: myapp
+    dbuser: django
+    dbpassword: password
+    locale: en_US.UTF-8
+    timezone: America/Lima
+    postgresql_conf_directory: /etc/postgresql/9.3/main/
+    postgresql_hba_file: /etc/postgresql/9.3/main/
+    all_ips: "'*'"
+    remote_connections4: '0.0.0.0/0'
+    remote_connections6: '::/0'

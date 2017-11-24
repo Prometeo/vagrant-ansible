@@ -1,0 +1,13 @@
+- import_tasks: locales.yml
+  tags:
+    - locale
+
+- import_tasks: install_apt.yml
+  when: ansible_os_family == 'Debian'
+  tags:
+    - db
+    - postgresql
+
+- import_tasks: configure.yml
+  tags:
+    - db
