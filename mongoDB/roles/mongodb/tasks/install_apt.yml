@@ -1,0 +1,32 @@
+---
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Add mongoDB GPG
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: EA312927
+    state: present
+    validate_certs: False
+  tags:
+    - gpg
+    - key
+
+- name: Add mongoDB repo
+  apt_repository:
+    repo: 'deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse'
+    state: present
+
+
+- name: Install MongoDB
+  become: yes
+  apt:
+    name: "mongodb-org"
+    state: present
+    force: yes
+  tags:
+    - db
+    - mongodb

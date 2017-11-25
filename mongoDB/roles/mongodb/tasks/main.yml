@@ -1,0 +1,9 @@
+- import_tasks: locales.yml
+  tags:
+    - locales
+
+- import_tasks: install_apt.yml
+  when: ansible_os_family == 'Debian'
+  tags:
+    - db
+    - mongodb
